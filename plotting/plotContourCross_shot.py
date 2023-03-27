@@ -32,3 +32,9 @@ ax.clabel(CS, CS.levels,inline=True,  fontsize=10)
 plt.plot([0,16.5],[-20,-20],'--', alpha=0.5, color='black')
 plt.plot([0,16.5],[20,20],'--', alpha=0.5,color='black')
 plt.plot([16.5,16.5],[-20,20],'--',alpha=0.5, color='black')
+# 
+plt.annotate('shoot',(17,0) )
+plt.annotate('cross',(23,0) )
+# 
+plt.xlabel('x[m]')
+plt.ylabel('y[m]')
