@@ -10,7 +10,9 @@ make_freekickscsv.py in the folder creat_dataset create a dataset that contains 
 fit_model.py is a file that contains the fit model from free kicks of crossing and shooting.
 To fit these models we used th following features:
 the distance, distance squared, distance cube, adjusted distance, adjusted distance squared,
-adjusted distance cube, aangle and arc length for cross and shoot
+adjusted distance cube, aangle and arc length for cross and shoot.
+## Plotting
+
 
 
 
