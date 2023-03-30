@@ -12,7 +12,8 @@ To fit these models we used th following features:
 the distance, distance squared, distance cube, adjusted distance, adjusted distance squared,
 adjusted distance cube, aangle and arc length for cross and shoot.
 ## Plotting
-
+1. data_histogram.py:
+2. plot_curves.py:
 
 
 
