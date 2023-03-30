@@ -9,6 +9,9 @@ import matplotlib.pyplot as plt
 import FCPython 
 import matplotlib.colors as colors
 
+
+
+
 #Create a 2D map of xG
 pgoal_2d_shot=np.zeros((68,68))
 for x in range(68):

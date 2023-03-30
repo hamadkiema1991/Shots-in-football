@@ -11,7 +11,7 @@ import numpy as np
 import ast
 
 # Opening data data from wyscout 
-train=pd.read_csv('data.csv')
+train=pd.read_csv('../data/data.csv')
 
 freeKicks=pd.DataFrame(columns=['matchId','Type','SecondaryType','location', 'team','opponentTeam', 'Player', 'goal'])
 
@@ -53,6 +53,62 @@ for i, freekick in train.iterrows():
               if (attack['withGoal']==True):
                   # it ends in a goal
                   freeKicks.at[i,'goal']=1
-     
+                  
+#create a column for free kick type
+for i , freekick in freeKicks.iterrows():
+    secon_type=freekick['SecondaryType']
+    
+    # secon_type is a list that contains the free kicks details
+    # in the data, secon_type is often empty
+    if len(secon_type)!=0:
+     for j in range(len(secon_type)):
+         
+      # get free kicks from shot
+      if( secon_type[j]=='free_kick_shot') :
+         freeKicks.at[i,'free_kick_type']='free_kick_shot'
+         
+      #get free kicks from cross
+      if( secon_type[j]=='free_kick_cross') :
+        freeKicks.at[i,'free_kick_type']='free_kick_cross'
+        
+    # Go through the dataframe and calculate X, Y co-ordinates.
+    # Distance from a line in the centre, distance squared, distance cube, 
+    # adjusted distance, adjusted distance squared, adjusted distance cube
+    # angle of shooting 
+    # arc length of shooting    
+    Location=ast.literal_eval(freekick['location'])
+    freeKicks.at[i,'X']=100-Location['x']
+    freeKicks.at[i,'Y']=Location['y']
+    freeKicks.at[i,'C']=abs(Location['y']-50)
+    
+    #Distance in metres and shot angle in radians.
+    x=freeKicks.at[i,'X']*105/100
+    y=freeKicks.at[i,'C']*68/100
+    freeKicks.at[i,'distance']=np.sqrt(x**2 + y**2)
+    a = np.arctan(7.32 *x /(x**2 + y**2 - (7.32/2)**2))
+    if a<0:
+      a=np.pi+a
+    freeKicks.at[i,'angle'] =a
+    
+    #arc length
+    freeKicks.at[i,'arc_length']=freeKicks.at[i,'angle']*freeKicks.at[i,'distance']
+    
+    #distance squared
+    freeKicks.at[i,'distance_squared']=np.power(freeKicks.at[i,'distance'],2)
+    
+    #distance cube
+    freeKicks.at[i,'distance_cube']=np.power(freeKicks.at[i,'distance'],3)
+    
+    # adjusted distance
+    freeKicks.at[i,'adj_distance']=(freeKicks.at[i,'distance']-16.5)
+    
+    #adjusted distance squared
+    freeKicks.at[i,'adj_distance_squared']=np.power(freeKicks.at[i,'adj_distance'],2)
+    
+    #adjusted distance cube
+    freeKicks.at[i,'adj_distance_cube']=np.power(freeKicks.at[i,'adj_distance'],3)
+    
+
+
 # Save data              
-freeKicks.to_csv('freeKicks.csv')
+freeKicks.to_csv('../data/freeKicks.csv')
