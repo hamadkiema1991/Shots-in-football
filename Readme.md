@@ -13,6 +13,9 @@ the distance, distance squared, distance cube, adjusted distance, adjusted dista
 adjusted distance cube, aangle and arc length for cross and shoot.
 ## Plotting
 1. data_histogram.py is loacated in the freekick_analysis folder:
+ 1.1 Number_of_shoots_from_free_kick.png: is the number of shooting from free kicks  from           differents points on the pitch.
+ 1.2 Number_of_crosses_from_free_kick.png:is the number of crossing from free kicks from           differents points on the pitch.
+ 1.3 Number_of_shots_minus_of_crosses_from free kick.png: is the number of shooting minus             crossing from free kicks from  differents points on the pitch
 2. plot_curves.py is loacated in the freekick_analysis folder:
 
 
