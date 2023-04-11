@@ -6,32 +6,32 @@ Created on Wed Mar 29 20:25:12 2023
 """
 
 
-import FCPython 
 import numpy as np
 import matplotlib.pyplot as plt
+import pitch
 import matplotlib.patches as mpatches
 
 # Make an example a plot to show the distance and angle of shooting  
 # create of pitch
-(fig,ax) = FCPython.createGoalMouth()
+(fig,ax) = pitch.createGoalMouth()
 
 # plotting axis of angle
-plt.plot((29,42),(0,25),color='black',linewidth=2.0)
-plt.plot((42,36),(25,0),color='black',linewidth=2.0)
+plt.plot((30,42),(0,25),color='black',linewidth=2.0)
+plt.plot((42,37.5),(25,0),color='black',linewidth=2.0)
 
 # plotting distance to the goal line
-plt.plot((32.5,32.5),(25,0),'--', color='black',alpha=0.7,label='d:distance to goal line')
+plt.plot((34,34),(25,0),'--', color='black',alpha=0.7,label='d:distance to goal line')
 #plotting c
-plt.plot((32.5,42),(25,25),'--',color='black',alpha=0.7,label='c:distance to centre')
+plt.plot((34,42),(25,25),'--',color='black',alpha=0.7,label='c:distance to centre')
 
 #plotting distance of shooting
-plt.plot((42,32.5),(25,0),'--',color='black',alpha=0.7,label='g: shooting distance')
+plt.plot((42,34),(25,0),'--',color='black',alpha=0.7,label='g: shooting distance')
 
 #plotting the arrow
-plt.arrow(40, 18, 5, 5)
+plt.arrow(40, 21, 5, 5)
 
 #annotate theta
-plt.annotate('theta',(45,23))
+plt.annotate('theta',(45,26))
 
 #annotate c
 plt.annotate('c',(36,26) )
@@ -40,10 +40,10 @@ plt.annotate('c',(36,26) )
 plt.annotate('d',(30,14) )
 
 #annotate g
-plt.annotate('g',(36,7) )
+plt.annotate('g',(37,7) )
 
 #draw of arc
-pac = mpatches.Arc((40,26),height=15,width=15,angle=260,theta1=355,theta2=15,linewidth=3.0, label='theta:shooting angle')
+pac = mpatches.Arc((42,28),height=15,width=15,angle=260,theta1=355,theta2=6,linewidth=3.0, label='theta:shooting angle')
 ax.add_patch(pac)
 plt.xlim((0,66))
 plt.ylim((-3,35))

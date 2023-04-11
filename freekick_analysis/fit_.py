@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 """
+Created on Wed Apr  5 13:02:10 2023
+
+@author: hamad
+"""
+
+# -*- coding: utf-8 -*-
+"""
 Created on Thu Mar 30 09:48:34 2023
 
 @author: hamad
@@ -112,18 +119,18 @@ for x in range(68):
             #probability of scoring by free kick from shot  is given pgoal
         pgoal_shot=(1/(1+np.exp(-alpha[0]-alpha[1]*a)))*100
         pgoal_2d_shot[x,y] =pgoal_shot
-        
 #plot pitch
-(fig,ax) = pitch.createGoalMouth()
-
+pitch = VerticalPitch(line_color='black', half = True, pitch_type='custom', pitch_length=105, pitch_width=68, line_zorder = 2)
+fig, ax = pitch.draw()
 #plot probability
 pos = ax.imshow(pgoal_2d_shot, extent=[-1,68,68,-1], aspect='auto',cmap=plt.cm.Reds,vmin=0, vmax=8, zorder = 1)
 fig.colorbar(pos, ax=ax)
-
 #make legend
-ax.set_title('Free kicks from shot Probability of goal')
+ax.set_title('Probability of goal')
+plt.xlim((0,68))
+plt.ylim((0,60))
 plt.gca().set_aspect('equal', adjustable='box')
-plt.savefig('../figures/contour_plot_freeKicks_shot.png')       
+plt.show()        
 
 #----------------------------free kick from cross model-----------------------------------------#
 
@@ -210,19 +217,19 @@ for y in range(68):
         
 
 #plot pitch
-(fig,ax) = pitch.createGoalMouth()
-
+pitch = VerticalPitch(line_color='black', half = True, pitch_type='custom', pitch_length=105, pitch_width=68, line_zorder = 2)
+fig, ax = pitch.draw()
 #plot probability
 pos = ax.imshow(pgoal_2d_cross, extent=[-1,68,68,-1], aspect='auto',cmap=plt.cm.Reds,vmin=0, vmax=8, zorder = 1)
 fig.colorbar(pos, ax=ax)
-
 #make legend
-ax.set_title('free kicks from cross probability of goal')
+ax.set_title('Probability of goal')
+plt.xlim((0,68))
+plt.ylim((0,60))
 plt.gca().set_aspect('equal', adjustable='box')
-plt.savefig('../figures/contour_plot_freeKick_cross.png')
+plt.show()
 
-
-# --------------------Open play free kick model-------------------------------------#
+# --------------------others free kick model-------------------------------------#
 
 #loading the data from free kicks of crossing
 freeKick_Others=df[df['free_kick_type']=='other_free_kick_type']
@@ -251,7 +258,7 @@ print('the AIC value of the all model is',freeKick_Others_test_model.aic)
 # the following model 
 
 #best model
-b_freeKick_Others_test_model= smf.glm(formula="goal ~angle+adj_distance", data=freeKick_Others, 
+b_freeKick_Others_test_model= smf.glm(formula="goal ~angle", data=freeKick_Others, 
                            family=sm.families.Binomial()).fit()
 #print summary
 print(b_freeKick_Others_test_model.summary())
@@ -313,104 +320,48 @@ for y in range(68):
         pgoal_2d[x,y] =  pgoal
 
 #plot pitch
+import pitch
+# pitch = VerticalPitch(line_color='black', half = True, pitch_type='custom', pitch_length=105, pitch_width=68, line_zorder = 2)
+# fig, ax = pitch.draw()
 (fig,ax) = pitch.createGoalMouth()
-
 #plot probability
 pos = ax.imshow(pgoal_2d, extent=[-1,68,68,-1], aspect='auto',cmap=plt.cm.Reds,vmin=0, vmax=8, zorder = 1)
 fig.colorbar(pos, ax=ax)
-
 #make legend
-ax.set_title('Probability of goal open play free kicks')
+ax.set_title('Probability of goal')
 plt.gca().set_aspect('equal', adjustable='box')
-plt.savefig('../figures/contour_plot_freeKicks_Open_play.png')
-
-#-------------------------Free kicks from shot vs free kicks from cross---------------------------------------#
 
 
+# Plot the number of shots from free kick 
+# loading the data 
 
-#plot pitch
+
+# get free kicks from shot 
+freeKickShot=df[df['free_kick_type']=='free_kick_shot']
+
+# remove the bad co-ordinates from the data
+# freeKickShot.drop([1154,1247,1433, 485, 484,1328, 1433,725,1412], axis=0, inplace=True)
+
+#Two dimensional histogram
+H_Shots=np.histogram2d(freeKickShot['X'], freeKickShot['Y'],bins=50,range=[[0, 100],[0, 100]])
+
+#Plot the number of shots from different points
 (fig,ax) = pitch.createGoalMouth()
-cmap = plt.cm.bwr.copy()
-cmap.set_bad('grey')
-# pitch = VerticalPitch(line_color='black', half = True, pitch_type='custom', pitch_length=105, pitch_width=68, line_zorder = 2)
-# fig, ax = pitch.draw()
-#plot probability
-pos = ax.imshow(pgoal_2d_shot-pgoal_2d_cross, extent=[-1,68,68,-1], aspect='auto',cmap=cmap,vmin=-2, vmax=2, zorder = 1)
+pos=ax.imshow(H_Shots[0], extent=[-1,66,104,-1], aspect='auto',label=True,cmap=plt.cm.Reds,vmin=0, vmax=50)
 fig.colorbar(pos, ax=ax)
-#make legend
-ax.set_title('Probability of goal from shot minus from cross')
-plt.gca().set_aspect('equal', adjustable='box')
-plt.savefig('../figures/contour_plot_freeKicks_Shot_Cross.png')
-
-
-#-----------------------other free kicks type vs free kicks from cross----------------------------------#
-
-
-#plot pitch
-(fig,ax) = pitch.createGoalMouth()
-cmap = plt.cm.bwr.copy()
-cmap.set_bad('grey')
-# pitch = VerticalPitch(line_color='black', half = True, pitch_type='custom', pitch_length=105, pitch_width=68, line_zorder = 2)
-# fig, ax = pitch.draw()
-#plot probability
-pos = ax.imshow(pgoal_2d_cross-pgoal_2d, extent=[-1,68,68,-1], aspect='auto',cmap=cmap,vmin=-4, vmax=4, zorder = 1)
-fig.colorbar(pos, ax=ax)
-#make legend
-ax.set_title('Probability of goal from open play free kicks minus from cross')
-plt.gca().set_aspect('equal', adjustable='box')
-plt.savefig('../figures/contour_plot_Open_play_freeKicks_and_Cross.png')
-
-#---------------------------------------------other free kicks type vs free kicks from shot------------------#
-
-
-#plot pitch
-(fig,ax) = pitch.createGoalMouth()
-cmap = plt.cm.bwr.copy()
-cmap.set_bad('grey')
-# pitch = VerticalPitch(line_color='black', half = True, pitch_type='custom', pitch_length=105, pitch_width=68, line_zorder = 2)
-# fig, ax = pitch.draw()
-#plot probability
-pos = ax.imshow(pgoal_2d_shot-pgoal_2d, extent=[-1,68,68,-1], aspect='auto',cmap=cmap,vmin=-4, vmax=4, zorder = 1)
-fig.colorbar(pos, ax=ax)
-#make legend
-ax.set_title('Probability of goal from open play free kicks minus from shot')
-plt.gca().set_aspect('equal', adjustable='box')
-plt.savefig('../figures/contour_plot_Open_play_freeKicks_and_shot.png')
-
-#-------------------------------------------------------------------------------#
-
-#best model
-d_freeKick_cross_test_model= smf.glm(formula="goal ~distance_squared", data=freeKickCross, 
-                           family=sm.families.Binomial()).fit()
-#print summary
-print(d_freeKick_cross_test_model.summary())
-
-
-#print the AIC's value of model
-print('the AIC value of the best model is', d_freeKick_cross_test_model.aic)
-
-sigma=d_freeKick_cross_test_model.params
 
 
 
 
-c0=(4*alpha[1])/7.32
-c1=(alpha[0]-sigma[0])/beta[1]+(c0/(2*sigma[1]))**2
-y=np.sqrt(c1+(x+c0/2*sigma[1])**2)
-plt.plot(x,y)
 
 
-x= np.arange(0, 40)
-y=np.arange(-20,20)
 
-X, Y = np.meshgrid(x, y)
-# Make a function tha compute the different between probability to shot and to cross from a free kick
-def f(x, y):
-    pg=y**2-c1+(x+c0/2*sigma[1])**2
-    return pg
-#plotting
-Z= f(X,Y)
-fig, ax = plt.subplots()
-CS = ax.contour(X, Y, Z,[0], colors='black')
-ax.clabel(CS, CS.levels,inline=True,  fontsize=10)
+
+
+
+
+
+
+
+
 

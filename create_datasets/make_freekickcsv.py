@@ -58,11 +58,13 @@ for i, freekick in train.iterrows():
 for i , freekick in freeKicks.iterrows():
     secon_type=freekick['SecondaryType']
     
+    #get free kicks from others type that cross and shot
+    freeKicks.at[i,'free_kick_type']='other_free_kick_type'
+    
     # secon_type is a list that contains the free kicks details
     # in the data, secon_type is often empty
     if len(secon_type)!=0:
      for j in range(len(secon_type)):
-         
       # get free kicks from shot
       if( secon_type[j]=='free_kick_shot') :
          freeKicks.at[i,'free_kick_type']='free_kick_shot'
