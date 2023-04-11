@@ -251,7 +251,7 @@ print('the AIC value of the all model is',freeKick_Others_test_model.aic)
 # the following model 
 
 #best model
-b_freeKick_Others_test_model= smf.glm(formula="goal ~angle+adj_distance", data=freeKick_Others, 
+b_freeKick_Others_test_model= smf.glm(formula="goal ~angle", data=freeKick_Others, 
                            family=sm.families.Binomial()).fit()
 #print summary
 print(b_freeKick_Others_test_model.summary())
