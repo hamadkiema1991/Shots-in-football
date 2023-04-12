@@ -261,6 +261,7 @@ gamma=b_freeKick_Others_test_model.params
 print('the AIC value of the best model is', b_freeKick_Others_test_model.aic)
 
 
+
 #get number of goal by head shot
 goal=list(freeKick_Others['goal'])
 
@@ -287,6 +288,7 @@ for y in range(68):
            #probability of scoring by free kick from cross is given pgoal
            pgoal=(1/(1+np.exp(-gamma[0]-gamma[1]*a)))*100
            pgoal_2d[x,y] =  pgoal
+           
      # Compute probability of goal to the right of penalty area
      if (y>53):
            a = np.arctan(7.32 *x /(x**2 + abs(y-68/2)**2 - (7.32/2)**2))
@@ -327,6 +329,22 @@ plt.savefig('../figures/contour_plot_freeKicks_Open_play.png')
 #-------------------------Free kicks from shot vs free kicks from cross---------------------------------------#
 
 
+shot_vs_cross=np.zeros((68,68))
+cross_vs_pass=np.zeros((68,68))
+
+for y in range(68):
+    for x in range(68):
+        #D on't recommend pass if distance less than 40.
+        d= np.sqrt(x**2 + abs(y-68/2)**2)
+        if d>35:    
+            shot_vs_cross[x,y]=0
+            cross_vs_pass[x,y]=pgoal_2d_cross[x,y]-pgoal_2d[x,y]
+        else:
+            cross_vs_pass[x,y]=0
+            shot_vs_cross[x,y]=pgoal_2d_shot[x,y]-pgoal_2d_cross[x,y]
+
+
+
 
 #plot pitch
 (fig,ax) = pitch.createGoalMouth()
@@ -335,7 +353,7 @@ cmap.set_bad('grey')
 # pitch = VerticalPitch(line_color='black', half = True, pitch_type='custom', pitch_length=105, pitch_width=68, line_zorder = 2)
 # fig, ax = pitch.draw()
 #plot probability
-pos = ax.imshow(pgoal_2d_shot-pgoal_2d_cross, extent=[-1,68,68,-1], aspect='auto',cmap=cmap,vmin=-2, vmax=2, zorder = 1)
+pos = ax.imshow(shot_vs_cross, extent=[-1,68,68,-1], aspect='auto',cmap=cmap,vmin=-2, vmax=2, zorder = 1)
 fig.colorbar(pos, ax=ax)
 #make legend
 ax.set_title('Probability of goal from shot minus from cross')
@@ -353,7 +371,7 @@ cmap.set_bad('grey')
 # pitch = VerticalPitch(line_color='black', half = True, pitch_type='custom', pitch_length=105, pitch_width=68, line_zorder = 2)
 # fig, ax = pitch.draw()
 #plot probability
-pos = ax.imshow(pgoal_2d_cross-pgoal_2d, extent=[-1,68,68,-1], aspect='auto',cmap=cmap,vmin=-4, vmax=4, zorder = 1)
+pos = ax.imshow(cross_vs_pass, extent=[-1,68,68,-1], aspect='auto',cmap=cmap,vmin=-4, vmax=4, zorder = 1)
 fig.colorbar(pos, ax=ax)
 #make legend
 ax.set_title('Probability of goal from open play free kicks minus from cross')
@@ -390,6 +408,43 @@ print(d_freeKick_cross_test_model.summary())
 print('the AIC value of the best model is', d_freeKick_cross_test_model.aic)
 
 sigma=d_freeKick_cross_test_model.params
+
+
+# Compare all three.
+# what_to_do is 0 if pass, 1 if cross and 2 if shoot
+what_to_do=np.zeros((68,68))
+for y in range(68):
+    for x in range(68):
+        #D on't recommend pass if distance less than 40.
+        d= np.sqrt(x**2 + abs(y-68/2)**2)
+        if d<40:    
+            if pgoal_2d_shot[x,y]>pgoal_2d_cross[x,y]:
+               #Shoot 
+               what_to_do[x,y]=2
+            else:
+               #Cross
+               what_to_do1[x,y]=1
+        else:
+
+               if pgoal_2d_cross[x,y]>pgoal_2d[x,y]:
+                   #Shoot 
+                   what_to_do[x,y]=1
+               else:
+                   #Pass
+                   what_to_do[x,y]=0
+               
+
+#plot pitch
+(fig,ax) = pitch.createGoalMouth()
+cmap = plt.cm.bwr.copy()
+cmap.set_bad('grey')
+#plot probability
+pos = ax.imshow(what_to_do, extent=[-1,68,68,-1], aspect='auto',cmap=cmap,vmin=0, vmax=2, zorder = 1)
+fig.colorbar(pos, ax=ax)
+#make legend
+ax.set_title('Pass (0), Cross (1) or Shoot (2)')
+plt.gca().set_aspect('equal', adjustable='box')
+plt.savefig('../figures/what_to_do.png')
 
 
 
