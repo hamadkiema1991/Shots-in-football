@@ -153,7 +153,7 @@ print('the AIC value of the all model is',freeKick_cross_test_model.aic)
 # the following model 
 
 #best model
-b_freeKick_cross_test_model= smf.glm(formula="goal ~adj_distance_cube", data=freeKickCross, 
+b_freeKick_cross_test_model= smf.glm(formula="goal ~distance_squared", data=freeKickCross, 
                            family=sm.families.Binomial()).fit()
 #print summary
 print(b_freeKick_cross_test_model.summary())
@@ -397,18 +397,6 @@ plt.savefig('../figures/contour_plot_Open_play_freeKicks_and_shot.png')
 
 #-------------------------------------------------------------------------------#
 
-#best model
-d_freeKick_cross_test_model= smf.glm(formula="goal ~distance_squared", data=freeKickCross, 
-                           family=sm.families.Binomial()).fit()
-#print summary
-print(d_freeKick_cross_test_model.summary())
-
-
-#print the AIC's value of model
-print('the AIC value of the best model is', d_freeKick_cross_test_model.aic)
-
-sigma=d_freeKick_cross_test_model.params
-
 
 # Compare all three.
 # what_to_do is 0 if pass, 1 if cross and 2 if shoot
@@ -423,7 +411,7 @@ for y in range(68):
                what_to_do[x,y]=2
             else:
                #Cross
-               what_to_do1[x,y]=1
+               what_to_do[x,y]=1
         else:
 
                if pgoal_2d_cross[x,y]>pgoal_2d[x,y]:
@@ -447,16 +435,29 @@ plt.gca().set_aspect('equal', adjustable='box')
 plt.savefig('../figures/what_to_do.png')
 
 
+#-----------------------------------------------Analytic solution--------------------------------------#
 
+
+#fitting the free kicks from cross model with only distance squared
+d_freeKick_cross_test_model= smf.glm(formula="goal ~distance_squared", data=freeKickCross, 
+                           family=sm.families.Binomial()).fit()
+#print summary
+print(d_freeKick_cross_test_model.summary())
+
+
+#print the AIC's value of model
+print('the AIC value of the best model is', d_freeKick_cross_test_model.aic)
+
+sigma=d_freeKick_cross_test_model.params
 
 c0=(4*alpha[1])/7.32
-c1=(alpha[0]-sigma[0])/beta[1]+(c0/(2*sigma[1]))**2
+c1=(alpha[0]-sigma[0])/sigma[1]+(c0/(2*sigma[1]))**2
 y=np.sqrt(c1+(x+c0/2*sigma[1])**2)
 plt.plot(x,y)
 
 
-x= np.arange(0, 40)
-y=np.arange(-20,20)
+x= np.arange(0, 100)
+y=np.arange(-50,50)
 
 X, Y = np.meshgrid(x, y)
 # Make a function tha compute the different between probability to shot and to cross from a free kick
@@ -466,6 +467,6 @@ def f(x, y):
 #plotting
 Z= f(X,Y)
 fig, ax = plt.subplots()
-CS = ax.contour(X, Y, Z,[0], colors='black')
+CS = ax.contour(X, Y, Z, colors='black')
 ax.clabel(CS, CS.levels,inline=True,  fontsize=10)
-
+plt.show()
