@@ -452,8 +452,10 @@ sigma=d_freeKick_cross_test_model.params
 
 c0=(4*alpha[1])/7.32
 c1=(alpha[0]-sigma[0])/sigma[1]+(c0/(2*sigma[1]))**2
-y=np.sqrt(c1+(x+c0/2*sigma[1])**2)
+y=np.sqrt(c1-(x+c0/2*sigma[1])**2)
+y2=-np.sqrt(c1-(x+c0/2*sigma[1])**2)
 plt.plot(x,y)
+plt.plot(x,y2)
 
 
 x= np.arange(0, 100)
