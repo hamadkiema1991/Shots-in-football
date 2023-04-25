@@ -1,13 +1,13 @@
-# Evaluating shots
+# __Evaluating shots__
 
-## Data loading
+## __Data loading__
 The data are from Wyscout. We combined five leagues: Premier league, Serie A, Ligue 1, Bundesliga and LaLiga from 2021-2022 season.
 
-## Producing datasets
-The python file make_freekickscsv.py in the folder creat_dataset create a dataset that contains all free kicks. In this dataset we added the distance, distance squared, distance cube, adjusted distance, adjusted distance squared, adjusted distance cube, aangle and arc length of shooting or crossing
+## __Producing datasets__
+The python file __make_freekickscsv.py__ in the folder creat_dataset create a dataset that contains all free kicks. In this dataset we added the distance, distance squared, distance cube, adjusted distance, adjusted distance squared, adjusted distance cube, aangle and arc length of shooting or crossing
 
 
-## Fitting models
+## __Fitting models__
 In fit_model.py file we fitted three models using logistic regression to determine the probability of scoring at different locations on the pitch: free kicks by shooting, by crossing and by open play. In addition, we plotted the contour of each of them. That file is in freekick_analysis folder.
 
 
@@ -30,6 +30,8 @@ In fit_model.py file we fitted three models using logistic regression to determi
 8.Number_of_crosses_from_free_kick.png: represents the number of free kicks from cross. That figure is a heatmap. Her python code is in data_histogram.py file. This file is in freekick_analysis folder.
 
 9.Number_of_shots_minus_of_crosses_from_free_kick.png: represents the number of free kicks from shoot minus from cross. That figure is a heatmap. Her python code is in data_histogram.py file. This file is in freekick_analysis folder.
+
+
 
 
 
